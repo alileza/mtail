@@ -14,7 +14,7 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
-      - name: Build image
+      - name: Build  image
         shell: bash
         env: 
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
