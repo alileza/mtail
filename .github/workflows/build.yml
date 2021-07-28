@@ -19,7 +19,6 @@ jobs:
         env: 
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
-            whoami
             SHORT_REV=$(git rev-parse --short HEAD)
             PROJECT_NAME="mtail"
             IMAGE_NAME=mtail
