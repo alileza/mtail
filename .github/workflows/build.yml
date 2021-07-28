@@ -1,0 +1,31 @@
+name: ci
+
+on: push
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Extract branch name.
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Build image
+        shell: bash
+        env: 
+            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+            whoami
+            SHORT_REV=$(git rev-parse --short HEAD)
+            PROJECT_NAME="mtail"
+            IMAGE_NAME=mtail
+            IMAGE_TAG="$SHORT_REV-${{ steps.extract_branch.outputs.branch }}"
+            CONTEXT=backend
+            echo "${{ secrets.ACCESS_TOKEN }}" | docker login -u "alileza" --password-stdin https://docker.pkg.github.com 
+            TAG="docker.pkg.github.com/alileza/$PROJECT_NAME/$IMAGE_NAME:$IMAGE_TAG"
+            docker build -t $TAG $CONTEXT
+            docker push $TAG
